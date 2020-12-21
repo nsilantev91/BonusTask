@@ -26,7 +26,7 @@ namespace BonusTask
         static void Main(string[] args)
         {
             string line;
-            var file = new System.IO.StreamReader("task3.txt"); // можно также протестировать на файле task2.txt. Там нет бесполезных символов
+            var file = new System.IO.StreamReader("task.txt"); // можно также протестировать на файле task2.txt. Там нет бесполезных символов
                                                                 // и на task3.txt. Там все символы - бесполезные :)
             line = file.ReadLine(); // предпологается, что продукции будут размещены на одной строке
             var arr = line.Split(' ');
