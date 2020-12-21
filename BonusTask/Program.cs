@@ -9,53 +9,49 @@ namespace BonusTask
 {
     class Program
     {
-
+        // функция для преобразования сета в строку Например, {1,2,3,9} => 1,2,3,9
         static string getSymbols(SortedSet<char> set)
         {
-            var aa = set.ToArray();
-            if (aa.Length == 1)
-                return aa[0].ToString();
-            var res = aa[0] + ",";
-            for (int i = 1; i <= aa.Length - 2; i++)
+            var arr = set.ToArray();
+            if (arr.Length == 1)
+                return arr[0].ToString();
+            var res = arr[0] + ",";
+            for (int i = 1; i <= arr.Length - 2; i++)
             {
-                res += aa[i] + ",";
+                res += arr[i] + ",";
             }
-             res += aa[aa.Length - 1];
+             res += arr[arr.Length - 1];
             return res;
         }
         static void Main(string[] args)
         {
             string line;
             var file = new System.IO.StreamReader("task.txt");
-            line = file.ReadLine();
-            System.Console.WriteLine(line);
+            line = file.ReadLine(); // предпологается, что продукции будут размещены на одной строке
             var arr = line.Split(' ');
             var set = new SortedSet<char>();
-            var pattern = @"^[a-z0-9]+$";
+            var pattern = @"^[a-z0-9]+$"; // для поиска только терминалов
             var reg = new Regex(pattern);
-            //шаг 1
+            //шаг 1, когда Yo = {}
             foreach (var a in arr)
             {
                 var s = a.Split('|');
                 foreach (var x in s)
                 {
-                    if (reg.IsMatch(x))
-                        set.Add(a[0]);
+                    if (reg.IsMatch(x)) 
+                        set.Add(a[0]); // добавляем нетерминал во множество
                 }
             }
-            Console.WriteLine(getSymbols(set));
-
+            //последующие шаги алгоритма Y1, Y2,...
             while (true)
             {
-                var ss2 = set;
-                
+                var set2 = set;
                 foreach (var aa in arr)
                 {
-                    var sss = aa.Split('|');
-                    var patt2 = @"^[a-z," + getSymbols(ss2) + ",0-9]+$";
+                    var str2 = aa.Split('|');
+                    var patt2 = @"^[a-z," + getSymbols(set2) + ",0-9]+$"; // для поиска только терминалов и нетерминалов из множества 
                     var reg2 = new Regex(patt2);
-                    //Console.WriteLine(patt2);
-                    foreach (var x in sss)
+                    foreach (var x in str2)
                     {
                         var str = x;
                         if (x.Contains("->"))
@@ -63,16 +59,23 @@ namespace BonusTask
                         if (reg2.IsMatch(str))
                         {
                             Console.WriteLine(aa);
-                            ss2.Add(aa[0]);
+                            set2.Add(aa[0]);
                         }
                     }
                 }
-                if (ss2.Count == set.Count)
+                if (set2.Count == set.Count) // если на двух шагах алгоритма множества не изменились - завершаем работу алгоритма
                 {
-                    Console.WriteLine(getSymbols(ss2));
+                    Console.WriteLine(getSymbols(set2));
+                    set = set2;
                     break;
                 }
-                set = ss2;
+                set = set2;
+            }
+            var final = set.ToArray();
+            Console.WriteLine("final");
+            foreach(var c in final)
+            { 
+               Console.WriteLine(line.Substring(line.IndexOf(c + "->"), line.IndexOf(' ', line.IndexOf(c + "->")) - line.IndexOf(c + "->")));
             }
         }
     }
