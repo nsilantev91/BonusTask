@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace BonusTask
@@ -26,7 +24,7 @@ namespace BonusTask
         static void Main(string[] args)
         {
             string line;
-            var file = new System.IO.StreamReader("task.txt");
+            var file = new System.IO.StreamReader("task.txt"); // можно также протестировать на файле task2.txt. Там нет бесполезных символов
             line = file.ReadLine(); // предпологается, что продукции будут размещены на одной строке
             var arr = line.Split(' ');
             var set = new SortedSet<char>();
@@ -57,22 +55,21 @@ namespace BonusTask
                         if (x.Contains("->"))
                             str = x.Substring(x.IndexOf("->") + 2);
                         if (reg2.IsMatch(str))
-                        {
-                            Console.WriteLine(aa);
-                            set2.Add(aa[0]);
-                        }
+                           set2.Add(aa[0]);
                     }
                 }
                 if (set2.Count == set.Count) // если на двух шагах алгоритма множества не изменились - завершаем работу алгоритма
                 {
-                    Console.WriteLine(getSymbols(set2));
                     set = set2;
                     break;
                 }
                 set = set2;
             }
+            Console.WriteLine("Исходная грамматика:");
+            foreach (var s in arr)
+                Console.WriteLine(s);
             var final = set.ToArray();
-            Console.WriteLine("final");
+            Console.WriteLine("Полученная новая грамматика:");
             foreach(var c in final)
             { 
                Console.WriteLine(line.Substring(line.IndexOf(c + "->"), line.IndexOf(' ', line.IndexOf(c + "->")) - line.IndexOf(c + "->")));
