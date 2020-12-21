@@ -8,9 +8,11 @@ namespace BonusTask
     class Program
     {
         // функция для преобразования сета в строку Например, {1,2,3,9} => 1,2,3,9
-        static string getSymbols(SortedSet<char> set)
+        static string GetSymbols(SortedSet<char> set)
         {
             var arr = set.ToArray();
+            if (arr.Length == 0)
+                return " ";
             if (arr.Length == 1)
                 return arr[0].ToString();
             var res = arr[0] + ",";
@@ -24,7 +26,8 @@ namespace BonusTask
         static void Main(string[] args)
         {
             string line;
-            var file = new System.IO.StreamReader("task.txt"); // можно также протестировать на файле task2.txt. Там нет бесполезных символов
+            var file = new System.IO.StreamReader("task3.txt"); // можно также протестировать на файле task2.txt. Там нет бесполезных символов
+                                                                // и на task3.txt. Там все символы - бесполезные :)
             line = file.ReadLine(); // предпологается, что продукции будут размещены на одной строке
             var arr = line.Split(' ');
             var set = new SortedSet<char>();
@@ -47,7 +50,7 @@ namespace BonusTask
                 foreach (var aa in arr)
                 {
                     var str2 = aa.Split('|');
-                    var patt2 = @"^[a-z," + getSymbols(set2) + ",0-9]+$"; // для поиска только терминалов и нетерминалов из множества 
+                    var patt2 = @"^[a-z," + GetSymbols(set2) + ",0-9]+$"; // для поиска только терминалов и нетерминалов из множества 
                     var reg2 = new Regex(patt2);
                     foreach (var x in str2)
                     {
@@ -70,6 +73,8 @@ namespace BonusTask
                 Console.WriteLine(s);
             var final = set.ToArray();
             Console.WriteLine("Полученная новая грамматика:");
+            if (final.Length == 0)
+                Console.WriteLine("Все символы оказались бесполезными :((");
             foreach(var c in final)
             { 
                Console.WriteLine(line.Substring(line.IndexOf(c + "->"), line.IndexOf(' ', line.IndexOf(c + "->")) - line.IndexOf(c + "->")));
