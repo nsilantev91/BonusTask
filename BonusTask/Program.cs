@@ -39,7 +39,10 @@ namespace BonusTask
                 var s = a.Split('|');
                 foreach (var x in s)
                 {
-                    if (reg.IsMatch(x)) 
+                    var str = x;
+                    if (x.Contains("->"))
+                        str = x.Substring(x.IndexOf("->") + 2);
+                    if (reg.IsMatch(str)) 
                         set.Add(a[0]); // добавляем нетерминал во множество
                 }
             }
